@@ -1,6 +1,6 @@
 # justpixels
 
-> **Privacy-first image metadata remover.** Strip EXIF, XMP, and other hidden data from your photos — entirely in your browser.
+> **Privacy-first image metadata remover.** Strip EXIF, XMP, and other hidden data from your photos entirely in your browser.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
@@ -8,15 +8,15 @@
 
 ## Features
 
-- **100% Client-Side** — Your images never leave your device
-- **No Upload, No Server** — All processing happens in your browser
+- **100% Client-Side** : Your images never leave your device
+- **No Upload, No Server** : All processing happens in your browser
 - **Two Processing Modes:**
-  - **Strip Mode** — Fast binary metadata removal, preserves quality
-  - **Re-encode Mode** — Full pixel reconstruction for paranoid-level privacy
-- **Batch Processing** — Process multiple images at once
-- **Format Support** — PNG, JPEG, and WebP
-- **Works Offline** — No internet required after initial load
-- **Dark/Light Theme** — Easy on the eyes
+  - **Strip Mode** : Fast binary metadata removal, preserves quality
+  - **Re-encode Mode** : Full pixel reconstruction for paranoid-level privacy
+- **Batch Processing** : Process multiple images at once
+- **Format Support** : PNG, JPEG, and WebP
+- **Works Offline** : No internet required after initial load
+- **Dark/Light Theme** : Easy on the eyes
 
 ## Security Architecture
 
@@ -32,12 +32,12 @@ justpixels is designed with privacy as the core principle:
 
 ### What Gets Removed
 
-- **EXIF** — GPS coordinates, camera model, timestamps
-- **XMP** — Adobe metadata, editing history
-- **IPTC** — Copyright, captions, keywords
-- **ICC Profiles** — Color profiles that may contain identifiers
-- **Comments** — Embedded text comments
-- **Thumbnails** — Embedded preview images that may contain metadata
+- **EXIF** : GPS coordinates, camera model, timestamps
+- **XMP** : Adobe metadata, editing history
+- **IPTC** : Copyright, captions, keywords
+- **ICC Profiles** : Color profiles that may contain identifiers
+- **Comments** : Embedded text comments
+- **Thumbnails** : Embedded preview images that may contain metadata
 
 ## Getting Started
 
@@ -49,7 +49,7 @@ justpixels is designed with privacy as the core principle:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/justpixels.git
+git clone https://github.com/senutpal/justpixels.git
 cd justpixels
 
 # Install dependencies
