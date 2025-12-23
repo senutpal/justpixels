@@ -147,8 +147,8 @@ function ImageGrid({ images }: ImageGridProps) {
         gridAutoRows: "minmax(200px, 1fr)",
       }}
     >
-      {images.map((img, i) => (
-        <ImageGridItem key={`${img.fileName}-${i}`} image={img} />
+      {images.map((img) => (
+        <ImageGridItem key={img.processedHash} image={img} />
       ))}
     </div>
   );

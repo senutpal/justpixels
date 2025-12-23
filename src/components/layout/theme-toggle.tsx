@@ -2,6 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -9,18 +10,25 @@ import { Button } from "@/components/ui/button";
  *
  * @description
  * A button that toggles between light and dark theme.
- * Uses next-themes for theme management.
+ * Uses next-themes for theme management with resolvedTheme
+ * to avoid hydration mismatch.
  *
  * @returns The rendered ThemeToggle component
  */
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Only render theme-dependent UI after mount to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   /**
    * Toggles between light and dark theme.
    */
   const handleThemeToggle = (): void => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   };
 
   return (
@@ -30,7 +38,7 @@ export function ThemeToggle() {
       onClick={handleThemeToggle}
       aria-label="Toggle theme"
     >
-      {theme === "dark" ? (
+      {mounted && resolvedTheme === "dark" ? (
         <Sun className="h-4 w-4" />
       ) : (
         <Moon className="h-4 w-4" />

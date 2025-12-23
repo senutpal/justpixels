@@ -44,7 +44,11 @@ export function FormatOptions({
     <div className="flex gap-3 items-center">
       <Select
         value={format}
-        onValueChange={(v) => onFormatChange(v as SupportedFormat)}
+        onValueChange={(v) => {
+          if (v === "image/png" || v === "image/jpeg" || v === "image/webp") {
+            onFormatChange(v);
+          }
+        }}
       >
         <SelectTrigger className="w-[120px]">
           <SelectValue placeholder="Format" />

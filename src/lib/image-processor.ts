@@ -228,7 +228,9 @@ export class ImageProcessor {
     // Step 4: Generate output hash
     const processedHash = await generateHash(processedBlob);
 
-    // Step 5: Create verification record
+    // Step 5: Create processing confirmation record
+    // Note: This confirms processing completed, not that metadata was verified.
+    // The isClean flag indicates the processing method guarantees metadata removal.
     const verificationResult: VerificationResult = {
       hasMetadata: false,
       metadataFound: [],

@@ -155,21 +155,26 @@ export async function stripJpegMetadata(file: File): Promise<Blob> {
     if (marker === JPEG_MARKERS.SOS) {
       i += 2 + segmentLength;
       // Copy raw image data until EOI marker
+      // Must handle byte stuffing: FF00 is an escaped 0xFF in image data
       while (i < data.length) {
         output.push(data[i]);
-        // Check for EOI (but beware of stuffed bytes: FF00 is escaped FF)
-        if (
-          data[i] === 0xff &&
-          i + 1 < data.length &&
-          data[i + 1] === JPEG_MARKERS.EOI
-        ) {
-          output.push(JPEG_MARKERS.EOI);
-          i += 2;
-          break;
+        if (data[i] === 0xff && i + 1 < data.length) {
+          const nextByte = data[i + 1];
+          // FF00 is byte stuffing (escaped FF in image data) - copy both bytes
+          if (nextByte === 0x00) {
+            i++;
+            output.push(data[i]);
+          } else if (nextByte === JPEG_MARKERS.EOI) {
+            // Actual EOI marker found
+            output.push(JPEG_MARKERS.EOI);
+            i += 2;
+            break;
+          }
+          // Other markers (like RST0-RST7) are valid in scan data
         }
         i++;
       }
-      break; // EOI found, processing complete
+      break; // EOI found or end of data, processing complete
     }
 
     i += 2 + segmentLength;
@@ -207,13 +212,14 @@ function shouldKeepJpegSegment(
 ): boolean {
   // APP0: Keep only if it's a valid JFIF header
   if (marker === JPEG_MARKERS.APP0) {
-    // JFIF signature: "JFIF\0" at offset+4
+    // JFIF signature: "JFIF\0" at offset+4 with null terminator at offset+8
     const hasJfifSig =
-      offset + 7 < data.length &&
+      offset + 8 < data.length &&
       data[offset + 4] === 0x4a && // J
       data[offset + 5] === 0x46 && // F
       data[offset + 6] === 0x49 && // I
-      data[offset + 7] === 0x46; // F
+      data[offset + 7] === 0x46 && // F
+      data[offset + 8] === 0x00; // null terminator
     return hasJfifSig;
   }
 

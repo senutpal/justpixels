@@ -1,7 +1,9 @@
+import { version } from "../../../package.json";
+
 /**
- * Application version string.
+ * Application version string sourced from package.json.
  */
-const APP_VERSION = "v1.0.0";
+const APP_VERSION = `v${version}`;
 
 /**
  * Shared footer component for the justpixels application.

@@ -138,47 +138,53 @@ export class WasmProcessor {
       premultiplyAlpha: "default",
     });
 
-    // Decode first frame
-    // Note: We explicitly decode only frame 0 to ensure consistency
-    // and avoid any hidden frames that might contain metadata
-    const result = await decoder.decode({ frameIndex: 0 });
-    const frame = result.image;
+    let frame: VideoFrame | null = null;
 
-    const width = frame.displayWidth;
-    const height = frame.displayHeight;
+    try {
+      // Decode first frame
+      // Note: We explicitly decode only frame 0 to ensure consistency
+      // and avoid any hidden frames that might contain metadata
+      const result = await decoder.decode({ frameIndex: 0 });
+      frame = result.image;
 
-    // Create canvas to extract pixels
-    let canvas: OffscreenCanvas | HTMLCanvasElement;
-    let ctx:
-      | OffscreenCanvasRenderingContext2D
-      | CanvasRenderingContext2D
-      | null;
+      const width = frame.displayWidth;
+      const height = frame.displayHeight;
 
-    if (typeof OffscreenCanvas !== "undefined") {
-      canvas = new OffscreenCanvas(width, height);
-      ctx = canvas.getContext("2d");
-    } else {
-      canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      ctx = canvas.getContext("2d");
+      // Create canvas to extract pixels
+      let canvas: OffscreenCanvas | HTMLCanvasElement;
+      let ctx:
+        | OffscreenCanvasRenderingContext2D
+        | CanvasRenderingContext2D
+        | null;
+
+      if (typeof OffscreenCanvas !== "undefined") {
+        canvas = new OffscreenCanvas(width, height);
+        ctx = canvas.getContext("2d");
+      } else {
+        canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        ctx = canvas.getContext("2d");
+      }
+
+      if (!ctx) {
+        throw new Error("Failed to create canvas 2D context");
+      }
+
+      // Draw VideoFrame to canvas (extracts raw pixels)
+      ctx.drawImage(frame, 0, 0);
+
+      // Encode to new blob
+      const blob = await this.encodeToBlob(canvas, options);
+
+      return { blob, width, height };
+    } finally {
+      // Free resources in all cases (success or error)
+      if (frame) {
+        frame.close();
+      }
+      decoder.close();
     }
-
-    if (!ctx) {
-      frame.close();
-      throw new Error("Failed to create canvas 2D context");
-    }
-
-    // Draw VideoFrame to canvas (extracts raw pixels)
-    ctx.drawImage(frame, 0, 0);
-
-    // Free VideoFrame memory immediately (may be GPU-resident)
-    frame.close();
-
-    // Encode to new blob
-    const blob = await this.encodeToBlob(canvas, options);
-
-    return { blob, width, height };
   }
 
   /**

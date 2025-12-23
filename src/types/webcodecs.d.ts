@@ -111,6 +111,8 @@ declare class ImageDecoder {
   close(): void;
   readonly type: string;
   readonly complete: boolean;
+  /** Promise that resolves when all data has been received */
+  readonly completed: Promise<void>;
   readonly tracks: ImageTrackList;
 }
 
@@ -123,6 +125,15 @@ declare class VideoFrame {
   close(): void;
   readonly displayWidth: number;
   readonly displayHeight: number;
+  readonly codedWidth?: number;
+  readonly codedHeight?: number;
+  readonly format?: string;
+  readonly visibleRect?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
   readonly duration: number | null;
   readonly timestamp: number | null;
   readonly colorSpace: VideoColorSpace;
@@ -141,6 +152,16 @@ interface VideoFrameInit {
   duration?: number;
   timestamp?: number;
   alpha?: "keep" | "discard";
+  visibleRect?: { x: number; y: number; width: number; height: number };
+  codedWidth?: number;
+  codedHeight?: number;
+  displayWidth?: number;
+  displayHeight?: number;
+  format?: string;
+  colorSpace?: VideoColorSpace;
+  rotation?: 0 | 90 | 180 | 270;
+  flip?: boolean;
+  layout?: Array<{ offset: number; stride: number }>;
 }
 
 /**

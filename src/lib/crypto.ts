@@ -62,10 +62,9 @@ export async function generateHash(blob: Blob): Promise<string> {
 
   // Convert hash bytes to hex string
   const hashArray = new Uint8Array(hashBuffer);
-  let hashHex = "";
-  for (let i = 0; i < hashArray.length; i++) {
-    hashHex += hashArray[i].toString(16).padStart(2, "0");
-  }
+  const hashHex = Array.from(hashArray, (byte) =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
 
   return hashHex;
 }

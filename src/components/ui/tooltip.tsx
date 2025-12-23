@@ -18,14 +18,27 @@ function TooltipProvider({
   );
 }
 
+/**
+ * Tooltip component.
+ *
+ * @description
+ * Should be used within a TooltipProvider that wraps the app or a subtree.
+ * Using a single TooltipProvider allows for shared configuration like delayDuration.
+ *
+ * @example
+ * ```tsx
+ * <TooltipProvider delayDuration={300}>
+ *   <Tooltip>
+ *     <TooltipTrigger>Hover me</TooltipTrigger>
+ *     <TooltipContent>Tooltip content</TooltipContent>
+ *   </Tooltip>
+ * </TooltipProvider>
+ * ```
+ */
 function Tooltip({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return (
-    <TooltipProvider>
-      <TooltipPrimitive.Root data-slot="tooltip" {...props} />
-    </TooltipProvider>
-  );
+  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
 }
 
 function TooltipTrigger({

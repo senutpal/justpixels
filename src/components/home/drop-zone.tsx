@@ -115,9 +115,13 @@ export function DropZone({
 
   /**
    * Handles drag leave events to reset the dragging state.
+   * Checks relatedTarget to avoid flicker when moving between child elements.
    */
-  const handleDragLeave = (): void => {
-    onDragStateChange(false);
+  const handleDragLeave = (e: React.DragEvent): void => {
+    // Only trigger if leaving the actual drop zone, not moving between children
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      onDragStateChange(false);
+    }
   };
 
   /**
@@ -245,7 +249,7 @@ export function DropZone({
         >
           {files.map((file, index) => (
             <div
-              key={`${file.name}-${index}`}
+              key={`${file.name}-${file.size}-${file.lastModified}-${index}`}
               className="relative group rounded-md overflow-hidden bg-muted border border-border min-h-[80px]"
             >
               {/* biome-ignore lint/performance/noImgElement: blob URLs not supported by next/image */}
