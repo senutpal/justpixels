@@ -40,4 +40,4 @@ output is in `out/` - deploy anywhere.
 
 ## license
 
-mit
+gpl-3.0
